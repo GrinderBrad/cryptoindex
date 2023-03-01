@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  rabbit:
+    build: 
+      context: ./rabbit
+      args:
+        - RABBITMQ_USER=trader
+        - RABBITMQ_PASSWORD=trader
+    environment:
+      - RABBITMQ_QUEUE_NAME: tickers
+      - RABBITMQ_TOPIC_NAME: tickers
+    restart: always
+    volumes:
+      - ./Volumes/rabbitmq/data:/var/lib/rabbitmq
+      - ./Volumes/rabbitmq/logs:/var/log/rabbitmq
+    ports:
+      - "5671:5671"
+      - "5672:5672"
+      - "15672:15672"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+  echange-worker:
+    build: ./exchange-worker
+    env_file:
+      - ./exchange-worker/.env
+    depends_on:
+      - rabbit
+      - redis
+
+volumes:
+  redis_data:

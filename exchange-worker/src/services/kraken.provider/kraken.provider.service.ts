@@ -33,6 +33,7 @@ export class KrakenProviderService {
             throw new ForbiddenException("Service unavailable");
         }
     }
+
 	async getTickers() {
         if (this.inFlight) {
             return null;
@@ -52,7 +53,7 @@ export class KrakenProviderService {
 			this.inFlight = true;
 			response = await requestPromise(requestOptions);
 			this.inFlight = false;
-            const result = Object.keys(response.result).map((pairName) => {
+            Object.keys(response.result).map((pairName) => {
                 const foundPair = Object.keys(assetPairsResponse).find((assetPair) => assetPairsResponse[assetPair].altname === pairName)
                 if (!foundPair) {
                     return;
@@ -63,7 +64,6 @@ export class KrakenProviderService {
                     price: response.result[pairName].a[0]
                 }
             })
-			console.log(tickers);
 			return tickers;
 		} catch (error) {
             console.log(error)
