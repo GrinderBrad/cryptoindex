@@ -1,0 +1,7 @@
+<h1>{{data.name}}</h1>
+
+<div class="container row">
+    <h2><span *ngFor="let assetPair of data.assetPairs"  class="badge bg-primary m-1">
+        {{assetPair.base}} / {{assetPair.quote}}
+    </span></h2> 
+</div>
