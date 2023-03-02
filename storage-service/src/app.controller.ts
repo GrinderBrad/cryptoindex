@@ -21,12 +21,11 @@ export class AppController {
 
       console.log('save ticker operation', data);
 
-      const newOrders =
-        await this.appService.saveTickers(
+      await this.appService.saveTickers(
           data.provider,
           data.tickers
         );
-      console.log(newOrders);
+      // console.log(newOrders);
       channel.ack(orginalMessage);
     } catch (error) {
       Logger.error(

@@ -7,7 +7,7 @@ export class AppService {
     @Inject("REDIS_CLIENT")
     private readonly redis: RedisClientType
   ) {}
-  async saveTickers(provider: string, tickers: any) {
+  async saveTickers(provider: string, tickers: any): Promise<void> {
     try {
       const saveOp = await this.redis.set(provider, JSON.stringify(tickers))
     } catch (error) {

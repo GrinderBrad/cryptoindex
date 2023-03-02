@@ -18,8 +18,6 @@ async function bootstrap() {
       },
     },
   );
-  AmqpListenerApp.useLogger(Logger);
-
   await AmqpListenerApp.listen();
   Logger.log(`AMQP listener started`, 'MAIN');
 }

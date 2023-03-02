@@ -7,9 +7,11 @@ services:
       args:
         - RABBITMQ_USER=trader
         - RABBITMQ_PASSWORD=trader
-    environment:
-      - RABBITMQ_QUEUE_NAME: tickers
-      - RABBITMQ_TOPIC_NAME: tickers
+        - RABBITMQ_QUEUE_NAME=tickers
+        - RABBITMQ_TOPIC_NAME=tickers
+    # environment:
+    #   - RABBITMQ_QUEUE_NAME: "tickers"
+    #   - RABBITMQ_TOPIC_NAME: "tickers"
     restart: always
     volumes:
       - ./Volumes/rabbitmq/data:/var/lib/rabbitmq
@@ -18,12 +20,16 @@ services:
       - "5671:5671"
       - "5672:5672"
       - "15672:15672"
+    networks:
+      buddytrading: {}
   redis:
     image: redis
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      buddytrading: {}
   echange-worker:
     build: ./exchange-worker
     env_file:
@@ -31,6 +37,22 @@ services:
     depends_on:
       - rabbit
       - redis
+    networks:
+      buddytrading: {}
+  storage-service:
+    build: ./storage-service
+    env_file:
+      - ./storage-service/.env
+    depends_on:
+      - rabbit
+      - redis
+    networks:
+      buddytrading: {}
 
 volumes:
   redis_data:
+
+networks:
+  buddytrading:
+    external:
+      name: buddytrading
